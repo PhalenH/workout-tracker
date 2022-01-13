@@ -9,20 +9,24 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // what does this do?
-app.unsubscribe(logger("dev"));
+// possibly logs when in dev nnot when deployed
+app.use(logger("dev"));
 
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
-// do i not need this?
-// app.use(express.static(path.join(__dirname, "public")));
 
 //    what do i need in my .env file   ||  what should this url be? || what does this true/false mean?
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/", { useNewUrlParser: true });
-
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workoutdb", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
+// with useNewUrlParser: true we need a port after localhost (for this I used workoutdb)
 
 app.listen(PORT, () => {
-    console.log(`App running on port ${PORT}!`);
-  });
+  console.log(`App running on port ${PORT}!`);
+});
