@@ -8,6 +8,7 @@ const ExerciseSchema = new Schema({
     trim: true,
     required: "Enter a name for the exercise",
   },
+
   type: {
     type: String,
     trim: true,
@@ -37,4 +38,4 @@ const ExerciseSchema = new Schema({
 
 const Exercise = mongoose.model("Exercise", ExerciseSchema);
 
-module.exports = Exercise
+module.exports = Exercise;

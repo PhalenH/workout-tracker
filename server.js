@@ -2,13 +2,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("morgan");
 
-const db = require("./models")
+const db = require("./models");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// what does this do?
-// possibly logs when in dev nnot when deployed
+// logs to console actions of events on page
 app.use(logger("dev"));
 
 // middleware
@@ -26,6 +25,79 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workoutdb", {
 });
 // with useNewUrlParser: true we need a port after localhost (for this I used workoutdb)
 
+app.get("/api/workouts", (req, res) => {
+  db.Workout.find({})
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+app.put("/api/workouts/:id", ({ body }, res) => {
+  db.Workout.updateOne;
+});
+
+app.post("/api/workouts", ({ body }, res) => {
+  db.Workout.create(body)
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+app.get("/api/workouts/range", (req, res) => {
+  db.Workout.find({});
+});
+
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
 });
+
+// app.get("/api/workouts", async (req, res) => {
+//     try {
+//       const workoutData = await db.Workout.find({});
+
+//       return res.json(workoutData);
+//     } catch (err) {
+//       res.status(500).json(err);
+//     }
+//   });
+
+//   app.put("/api/workouts/:id", async (req, res) => {
+//     try {
+//       const workoutData = await db.Workout.updateOne(
+//         {},
+//         {
+//           where: {},
+//         }
+//       );
+
+//       return res.json(workoutData);
+//     } catch (err) {
+//       res.status(500).json(err);
+//     }
+//   });
+
+//   app.post("/api/workouts", async (req, res) => {
+//     try {
+//       const workoutData = await db.Workout.create;
+
+//       return res.json(workoutData);
+//     } catch (err) {
+//       res.status(500).json(err);
+//     }
+//   });
+
+//   app.get("/api/workouts/range", async (req, res) => {
+//     try {
+//       const workoutData = await db.Workout.find({});
+
+//       return res.json(workoutData);
+//     } catch (err) {
+//       res.status(500).json(err);
+//     }
+//   });
