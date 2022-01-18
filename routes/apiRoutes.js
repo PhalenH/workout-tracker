@@ -1,14 +1,25 @@
 const router = require("express").Router();
-const Workout = require("../models/workout")
-
-// add an exercise to a workout
-router.put("/workouts/:id", ({ body }, res) => {
-  Workout.updateOne;
-});
+const Workout = require("../models/Workout");
 
 // create a new workout
 router.post("/workouts", ({ body }, res) => {
   Workout.create(body)
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+// add an exercise to a workout
+router.put("/workouts/:id", ({ body }, res) => {
+  Workout.findByIdAndUpdate(
+    { _id: mongojs.ObjectId(req.params.id) },
+    { $push: { exercises: body } },
+    { new: true }
+    //  return the modified document rather than the original. defaults to false
+  )
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })
@@ -28,6 +39,9 @@ router.get("/workouts", (req, res) => {
       res.json(err);
     });
 });
+
+// (https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/)
+// Calculates aggregate values for the data in a collection or a view.
 
 // get stuff from last 7 workouts
 router.get("/workouts/range", (req, res) => {
