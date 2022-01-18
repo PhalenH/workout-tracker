@@ -1,8 +1,24 @@
 const router = require("express").Router();
 const Workout = require("../models/workout")
 
+// add an exercise to a workout
+router.put("/workouts/:id", ({ body }, res) => {
+  Workout.updateOne;
+});
+
+// create a new workout
+router.post("/workouts", ({ body }, res) => {
+  Workout.create(body)
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
 // has to get only the last workout
-router.get("/api/workouts", (req, res) => {
+router.get("/workouts", (req, res) => {
   // filter?
   Workout.find({})
     .then((dbWorkout) => {
@@ -13,24 +29,8 @@ router.get("/api/workouts", (req, res) => {
     });
 });
 
-// add an exercise to a workout
-router.put("/api/workouts/:id", ({ body }, res) => {
-  Workout.updateOne;
-});
-
-// create a new workout
-router.post("/api/workouts", ({ body }, res) => {
-  Workout.create(body)
-    .then((dbWorkout) => {
-      res.json(dbWorkout);
-    })
-    .catch((err) => {
-      res.json(err);
-    });
-});
-
 // get stuff from last 7 workouts
-router.get("/api/workouts/range", (req, res) => {
+router.get("/workouts/range", (req, res) => {
   Workout.find({});
 });
 
