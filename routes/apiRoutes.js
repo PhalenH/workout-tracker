@@ -8,35 +8,38 @@ router.post("/workouts", ({ body }, res) => {
       res.json(dbWorkout);
     })
     .catch((err) => {
-      res.json(err);
+      res.status(400).json(err);
     });
 });
 
 // add an exercise to a workout
-router.put("/workouts/:id", ({ body }, res) => {
+router.put("/workouts/:id", ({ body, params }, res) => {
   Workout.findByIdAndUpdate(
-    { _id: mongojs.ObjectId(req.params.id) },
+    // why could I just use params.id, and didn't have to do { _id: mongojs.ObjectId(params.id) },
+    { _id: params.id },
     { $push: { exercises: body } },
     { new: true }
-    //  return the modified document rather than the original. defaults to false
+    // new returns the modified document rather than the original
   )
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })
     .catch((err) => {
-      res.json(err);
+      res.status(400).json(err);
     });
 });
 
 // has to get only the last workout
 router.get("/workouts", (req, res) => {
-  // filter?
-  Workout.find({})
+  // filter and sort?
+  Workout.find()
+    .sort({ day: -1 })
+    .limit(1)
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })
     .catch((err) => {
-      res.json(err);
+      res.status(400).json(err);
     });
 });
 
@@ -45,7 +48,13 @@ router.get("/workouts", (req, res) => {
 
 // get stuff from last 7 workouts
 router.get("/workouts/range", (req, res) => {
-  Workout.find({});
+  Workout.find({})
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 });
 
 module.exports = router;

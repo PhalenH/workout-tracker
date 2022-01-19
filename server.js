@@ -13,8 +13,8 @@ app.use(logger("dev"));
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workoutdb", {
+//                                                    what should this end url be? I changed it to workout so would get seeded data
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
