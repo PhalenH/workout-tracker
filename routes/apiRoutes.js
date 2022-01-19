@@ -15,8 +15,7 @@ router.post("/api/workouts", ({ body }, res) => {
 // Add an exercise to a workout
 router.put("/api/workouts/:id", ({ body, params }, res) => {
   Workout.findByIdAndUpdate(
-    // why could I just use params.id, and didn't have to do { _id: mongojs.ObjectId(params.id) },
-    { _id: params.id },
+    { _id: mongojs.ObjectId(params.id) },
     { $push: { exercises: body } },
     { new: true }
     // new returns the modified document rather than the original
@@ -55,8 +54,7 @@ router.get("/api/workouts/range", (req, res) => {
   Workout.aggregate([
     {
       $addFields: {
-        // why did field name for duration only work when matching the map param?
-        // do I even need the combined weight sum?
+        // why did field name for duration only work when matching the map param? sending an object like req.body
         totalDuration: { $sum: "$exercises.duration" },
         combinedWeight: { $sum: "$exercises.weight" },
       },

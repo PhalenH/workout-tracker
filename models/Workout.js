@@ -16,7 +16,6 @@ const WorkoutSchema = new Schema({
 
       name: {
         type: String,
-        unique: true,
         trim: true,
         required: "Enter a name for the exercise",
       },
