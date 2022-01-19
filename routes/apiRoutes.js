@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Workout = require("../models/Workout");
 
 // create a new workout
-router.post("/workouts", ({ body }, res) => {
+router.post("/api/workouts", ({ body }, res) => {
   Workout.create(body)
     .then((dbWorkout) => {
       res.json(dbWorkout);
@@ -13,7 +13,7 @@ router.post("/workouts", ({ body }, res) => {
 });
 
 // Add an exercise to a workout
-router.put("/workouts/:id", ({ body, params }, res) => {
+router.put("/api/workouts/:id", ({ body, params }, res) => {
   Workout.findByIdAndUpdate(
     // why could I just use params.id, and didn't have to do { _id: mongojs.ObjectId(params.id) },
     { _id: params.id },
@@ -30,10 +30,10 @@ router.put("/workouts/:id", ({ body, params }, res) => {
 });
 
 // Get only the last workout
-router.get("/workouts", (req, res) => {
+router.get("/api/workouts", (req, res) => {
   // filter and sort?
   Workout.find()
-    .sort({ day: -1 })
+    .sort({ day: 1 })
     .limit(1)
     .then((dbWorkout) => {
       res.json(dbWorkout);
@@ -43,12 +43,10 @@ router.get("/workouts", (req, res) => {
     });
 });
 
-// (https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/)
-// Calculates aggregate values for the data in a collection or a view.
 
 // View the combined weight of multiple exercises from the past seven workouts on the stats page.
 // View the total duration of each workout from the past seven workouts on the stats page.
-router.get("/workouts/range", (req, res) => {
+router.get("/api/workouts/range", (req, res) => {
   Workout.aggregate([
     {
       $addFields: {
@@ -57,7 +55,7 @@ router.get("/workouts/range", (req, res) => {
       },
     },
   ])
-    .sort({ day: -1 })
+    .sort({ day: 1 })
     .limit(7)
     .then((dbWorkout) => {
       res.json(dbWorkout);
@@ -68,7 +66,7 @@ router.get("/workouts/range", (req, res) => {
 });
 
 // delete workout from id
-router.delete("/workouts/:id", ({ params }, res) => {
+router.delete("/api/workouts/:id", ({ params }, res) => {
   Workout.findByIdAndDelete({ _id: params.id })
     .then((dbWorkout) => {
       res.json(dbWorkout);
