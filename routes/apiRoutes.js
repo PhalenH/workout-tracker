@@ -31,9 +31,15 @@ router.put("/api/workouts/:id", ({ body, params }, res) => {
 
 // Get only the last workout
 router.get("/api/workouts", (req, res) => {
-  // filter and sort?
-  Workout.find()
-    .sort({ day: 1 })
+  // need aggregate again since there's a total duration on the landing page
+  Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: { $sum: "$exercises.duration" },
+      },
+    },
+  ])
+    .sort({ day: -1 })
     .limit(1)
     .then((dbWorkout) => {
       res.json(dbWorkout);
@@ -43,15 +49,16 @@ router.get("/api/workouts", (req, res) => {
     });
 });
 
-
 // View the combined weight of multiple exercises from the past seven workouts on the stats page.
 // View the total duration of each workout from the past seven workouts on the stats page.
 router.get("/api/workouts/range", (req, res) => {
   Workout.aggregate([
     {
       $addFields: {
+        // why did field name for duration only work when matching the map param?
+        // do I even need the combined weight sum?
+        totalDuration: { $sum: "$exercises.duration" },
         combinedWeight: { $sum: "$exercises.weight" },
-        combinedDuration: { $sum: "$exercises.duration" },
       },
     },
   ])
