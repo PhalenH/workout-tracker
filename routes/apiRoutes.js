@@ -15,7 +15,7 @@ router.post("/api/workouts", ({ body }, res) => {
 // Add an exercise to a workout
 router.put("/api/workouts/:id", ({ body, params }, res) => {
   Workout.findByIdAndUpdate(
-    { _id: mongojs.ObjectId(params.id) },
+    { _id: params.id },
     { $push: { exercises: body } },
     { new: true }
     // new returns the modified document rather than the original
